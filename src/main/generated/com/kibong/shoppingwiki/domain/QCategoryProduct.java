@@ -22,11 +22,19 @@ public class QCategoryProduct extends EntityPathBase<CategoryProduct> {
 
     public static final QCategoryProduct categoryProduct = new QCategoryProduct("categoryProduct");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final QCategory category;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
+
     public final QProduct product;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
 
     public QCategoryProduct(String variable) {
         this(CategoryProduct.class, forVariable(variable), INITS);

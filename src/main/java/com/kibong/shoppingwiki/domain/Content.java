@@ -1,6 +1,7 @@
 package com.kibong.shoppingwiki.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table
-public class Content {
+public class Content extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +33,7 @@ public class Content {
     public Content() {
     }
 
+    @Builder
     public Content(String content_subject, String content_detail, Category category, List<ContentLog> contentLogList) {
         this.content_subject = content_subject;
         this.content_detail = content_detail;

@@ -1,12 +1,13 @@
 package com.kibong.shoppingwiki.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Getter
 @Table
-public class CategoryProduct {
+public class CategoryProduct extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,7 @@ public class CategoryProduct {
     public CategoryProduct() {
     }
 
+    @Builder
     public CategoryProduct(Long id, Category category, Product product) {
         this.id = id;
         this.category = category;

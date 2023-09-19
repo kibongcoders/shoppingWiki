@@ -1,12 +1,13 @@
 package com.kibong.shoppingwiki.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Getter
 @Table
-public class ContentLog {
+public class ContentLog extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,7 @@ public class ContentLog {
     public ContentLog() {
     }
 
+    @Builder
     public ContentLog(String content_log_ip, String content_log_detail, Content content) {
         this.content_log_ip = content_log_ip;
         this.content_log_detail = content_log_detail;

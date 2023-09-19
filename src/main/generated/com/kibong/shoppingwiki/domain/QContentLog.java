@@ -22,6 +22,8 @@ public class QContentLog extends EntityPathBase<ContentLog> {
 
     public static final QContentLog contentLog = new QContentLog("contentLog");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final QContent content;
 
     public final StringPath content_log_detail = createString("content_log_detail");
@@ -29,6 +31,12 @@ public class QContentLog extends EntityPathBase<ContentLog> {
     public final StringPath content_log_ip = createString("content_log_ip");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
 
     public QContentLog(String variable) {
         this(ContentLog.class, forVariable(variable), INITS);

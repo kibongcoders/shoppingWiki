@@ -22,6 +22,8 @@ public class QContent extends EntityPathBase<Content> {
 
     public static final QContent content = new QContent("content");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final QCategory category;
 
     public final StringPath content_detail = createString("content_detail");
@@ -31,6 +33,12 @@ public class QContent extends EntityPathBase<Content> {
     public final ListPath<ContentLog, QContentLog> contentLogList = this.<ContentLog, QContentLog>createList("contentLogList", ContentLog.class, QContentLog.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
 
     public QContent(String variable) {
         this(Content.class, forVariable(variable), INITS);

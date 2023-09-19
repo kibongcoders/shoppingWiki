@@ -1,6 +1,7 @@
 package com.kibong.shoppingwiki.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table
-public class Product {
+public class Product extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,7 @@ public class Product {
     public Product() {
     }
 
+    @Builder
     public Product(String product_name, List<CategoryProduct> productList) {
         this.product_name = product_name;
         this.productList = productList;
