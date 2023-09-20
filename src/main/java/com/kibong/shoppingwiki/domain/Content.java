@@ -19,13 +19,13 @@ public class Content extends BaseEntity{
     @Comment("내용 아이디")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "content_subject" ,nullable = false)
     @Comment("내용 제목")
-    private String content_subject;
+    private String contentSubject;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(name = "content_detail" ,columnDefinition = "LONGTEXT")
     @Comment("내용 상세")
-    private String content_detail;
+    private String contentDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -40,9 +40,9 @@ public class Content extends BaseEntity{
     }
 
     @Builder
-    public Content(String content_subject, String content_detail, Category category, List<ContentLog> contentLogList) {
-        this.content_subject = content_subject;
-        this.content_detail = content_detail;
+    public Content(String contentSubject, String contentDetail, Category category, List<ContentLog> contentLogList) {
+        this.contentSubject = contentSubject;
+        this.contentDetail = contentDetail;
         this.category = category;
         this.contentLogList = contentLogList;
     }

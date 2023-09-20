@@ -16,13 +16,13 @@ public class ContentLog extends BaseEntity{
     @Comment("내용 로그 아이디")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name="content_log_ip",nullable = false)
     @Comment("내용 로그 아이피")
-    private String content_log_ip;
+    private String contentLogIp;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(name="content_log_detail", columnDefinition = "LONGTEXT")
     @Comment("내용 상세 로그")
-    private String content_log_detail;
+    private String contentLogDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Comment("내용")
@@ -32,9 +32,9 @@ public class ContentLog extends BaseEntity{
     }
 
     @Builder
-    public ContentLog(String content_log_ip, String content_log_detail, Content content) {
-        this.content_log_ip = content_log_ip;
-        this.content_log_detail = content_log_detail;
+    public ContentLog(String contentLogIp, String contentLogDetail, Content content) {
+        this.contentLogIp = contentLogIp;
+        this.contentLogDetail = contentLogDetail;
         this.content = content;
     }
 }

@@ -26,11 +26,11 @@ public class QContent extends EntityPathBase<Content> {
 
     public final QCategory category;
 
-    public final StringPath content_detail = createString("content_detail");
-
-    public final StringPath content_subject = createString("content_subject");
+    public final StringPath contentDetail = createString("contentDetail");
 
     public final ListPath<ContentLog, QContentLog> contentLogList = this.<ContentLog, QContentLog>createList("contentLogList", ContentLog.class, QContentLog.class, PathInits.DIRECT2);
+
+    public final StringPath contentSubject = createString("contentSubject");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

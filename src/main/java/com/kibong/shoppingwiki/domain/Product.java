@@ -19,9 +19,9 @@ public class Product extends BaseEntity{
     @Comment("상품 아이디")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "product_name", nullable = false)
     @Comment("상품 내용")
-    private String product_name;
+    private String productName;
 
     @OneToMany(mappedBy = "product")
     @Comment("상품 리스트")
@@ -31,8 +31,8 @@ public class Product extends BaseEntity{
     }
 
     @Builder
-    public Product(String product_name, List<CategoryProduct> productList) {
-        this.product_name = product_name;
+    public Product(String productName, List<CategoryProduct> productList) {
+        this.productName = productName;
         this.productList = productList;
     }
 }

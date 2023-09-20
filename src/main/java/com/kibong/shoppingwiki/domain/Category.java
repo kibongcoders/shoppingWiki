@@ -19,13 +19,13 @@ public class Category extends BaseEntity{
     @Comment("카테고리 아이디")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name="category_name",nullable = false)
     @Comment("카테고리 이름")
-    private String category_name;
+    private String categoryName;
 
     @OneToMany(mappedBy = "category")
     @Comment("카테고리 상품 리스트")
-    List<CategoryProduct> categoryList = new ArrayList<>();
+    List<CategoryProduct> categoryProductList = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
     @Comment("카테고리 리스트")
@@ -35,9 +35,9 @@ public class Category extends BaseEntity{
     }
 
     @Builder
-    public Category(String category_name, List<CategoryProduct> categoryList, List<Content> contentList) {
-        this.category_name = category_name;
-        this.categoryList = categoryList;
+    public Category(String categoryName, List<CategoryProduct> categoryProductList, List<Content> contentList) {
+        this.categoryName = categoryName;
+        this.categoryProductList = categoryProductList;
         this.contentList = contentList;
     }
 }

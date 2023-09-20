@@ -26,9 +26,9 @@ public class QContentLog extends EntityPathBase<ContentLog> {
 
     public final QContent content;
 
-    public final StringPath content_log_detail = createString("content_log_detail");
+    public final StringPath contentLogDetail = createString("contentLogDetail");
 
-    public final StringPath content_log_ip = createString("content_log_ip");
+    public final StringPath contentLogIp = createString("contentLogIp");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

@@ -22,9 +22,9 @@ public class QCategory extends EntityPathBase<Category> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final StringPath category_name = createString("category_name");
+    public final StringPath categoryName = createString("categoryName");
 
-    public final ListPath<CategoryProduct, QCategoryProduct> categoryList = this.<CategoryProduct, QCategoryProduct>createList("categoryList", CategoryProduct.class, QCategoryProduct.class, PathInits.DIRECT2);
+    public final ListPath<CategoryProduct, QCategoryProduct> categoryProductList = this.<CategoryProduct, QCategoryProduct>createList("categoryProductList", CategoryProduct.class, QCategoryProduct.class, PathInits.DIRECT2);
 
     public final ListPath<Content, QContent> contentList = this.<Content, QContent>createList("contentList", Content.class, QContent.class, PathInits.DIRECT2);
 
