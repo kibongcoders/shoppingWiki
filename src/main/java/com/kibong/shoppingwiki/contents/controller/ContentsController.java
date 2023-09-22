@@ -25,7 +25,7 @@ public class ContentsController {
 
     @GetMapping("/write")
     ModelAndView writeContents(){
-        ModelAndView mav = new ModelAndView("contents/write");
+        ModelAndView mav = new ModelAndView("writeTest");
 
         return mav;
     }
