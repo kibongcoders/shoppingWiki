@@ -20,18 +20,18 @@ public class QCategory extends EntityPathBase<Category> {
 
     public static final QCategory category = new QCategory("category");
 
-    public final QBaseEntity _super = new QBaseEntity(this);
+    public final QBaseTimeEntity _super = new QBaseTimeEntity(this);
 
-    public final StringPath categoryName = createString("categoryName");
+    public final StringPath category_name = createString("category_name");
 
-    public final ListPath<CategoryProduct, QCategoryProduct> categoryProductList = this.<CategoryProduct, QCategoryProduct>createList("categoryProductList", CategoryProduct.class, QCategoryProduct.class, PathInits.DIRECT2);
-
-    public final ListPath<Content, QContent> contentList = this.<Content, QContent>createList("contentList", Content.class, QContent.class, PathInits.DIRECT2);
+    public final ListPath<ContentsCategory, QContentsCategory> contentsCategoryList = this.<ContentsCategory, QContentsCategory>createList("contentsCategoryList", ContentsCategory.class, QContentsCategory.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
+
+    public final NumberPath<Long> parent_id = createNumber("parent_id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;

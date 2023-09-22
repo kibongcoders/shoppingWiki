@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table
-public class Category extends BaseEntity{
+public class Category extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,25 +19,24 @@ public class Category extends BaseEntity{
     @Comment("카테고리 아이디")
     private Long id;
 
-    @Column(name="category_name",nullable = false)
+    @Column(name = "category_name", nullable = false)
     @Comment("카테고리 이름")
-    private String categoryName;
+    private String category_name;
+
+    @Column(name = "parent_id")
+    @Comment("카테고리 부모 아이디")
+    private Long parent_id;
 
     @OneToMany(mappedBy = "category")
-    @Comment("카테고리 상품 리스트")
-    List<CategoryProduct> categoryProductList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category")
-    @Comment("카테고리 리스트")
-    List<Content> contentList = new ArrayList<>();
+    List<ContentsCategory> contentsCategoryList = new ArrayList<>();
 
     public Category() {
     }
 
     @Builder
-    public Category(String categoryName, List<CategoryProduct> categoryProductList, List<Content> contentList) {
-        this.categoryName = categoryName;
-        this.categoryProductList = categoryProductList;
-        this.contentList = contentList;
+    public Category(String category_name, Long parent_id, List<ContentsCategory> contentsCategoryList) {
+        this.category_name = category_name;
+        this.parent_id = parent_id;
+        this.contentsCategoryList = contentsCategoryList;
     }
 }
