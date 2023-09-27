@@ -2,15 +2,15 @@ package com.kibong.shoppingwiki.contents.controller;
 
 import com.kibong.shoppingwiki.contents_category.service.ContentsCategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/contents")
+@RequestMapping("/shoppingwiki/contents")
 @RequiredArgsConstructor
+@Slf4j
 public class ContentsController {
     private final ContentsCategoryService contentsCategoryService;
 
@@ -28,5 +28,18 @@ public class ContentsController {
         ModelAndView mav = new ModelAndView("writeTest");
 
         return mav;
+    }
+
+    @GetMapping("/hello")
+    @ResponseBody
+    String hello(){
+        return "hello";
+    }
+
+    @GetMapping("/message")
+    @ResponseBody
+    String message(@RequestHeader("wiki-request") String wikiRequest){
+        log.info("wiki-request = {}", wikiRequest);
+        return "wiki message";
     }
 }

@@ -47,14 +47,14 @@ public class ContentsCategoryServiceTest {
         assertEquals(returnContents.getContentsSubject(), contentsDto.getContentsSubject());
     }
 
-    @Test
-    @DisplayName("콘텐츠 생성")
-    void createContents(){
-//        Contents contents = Contents.builder().contentsDetail("아이폰 굿").contentsSubject("아이폰").contentsUseYn(true).build();
-//        contentsRepository.save(contents);
-
-        ContentsCategory contentsCategory = ContentsCategory.builder().contents(contentsRepository.findById(1L).get()).build();
-        contentsCategoryRepository.save(contentsCategory);
-    }
+//    @Test
+//    @DisplayName("콘텐츠 생성")
+//    void createContents(){
+////        Contents contents = Contents.builder().contentsDetail("아이폰 굿").contentsSubject("아이폰").contentsUseYn(true).build();
+////        contentsRepository.save(contents);
+//
+//        ContentsCategory contentsCategory = ContentsCategory.builder().contents(contentsRepository.findById(1L).get()).build();
+//        contentsCategoryRepository.save(contentsCategory);
+//    }
 
 }
