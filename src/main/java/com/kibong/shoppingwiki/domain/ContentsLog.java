@@ -25,16 +25,16 @@ public class ContentsLog extends BaseTimeEntity{
     private String contentsLogDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contents_id")
-    private Contents contents;
+    @JoinColumn(name = "user_contents_id")
+    private UserContents userContents;
 
     public ContentsLog() {
     }
 
     @Builder
-    public ContentsLog(String contentsLogIp, String contentsLogDetail, Contents contents) {
+    public ContentsLog(String contentsLogIp, String contentsLogDetail, UserContents userContents) {
         this.contentsLogIp = contentsLogIp;
         this.contentsLogDetail = contentsLogDetail;
-        this.contents = contents;
+        this.userContents = userContents;
     }
 }

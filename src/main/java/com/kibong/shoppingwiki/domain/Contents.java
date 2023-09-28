@@ -35,17 +35,17 @@ public class Contents extends BaseTimeEntity{
     private List<ContentsCategory> contentsCategoryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "contents")
-    private List<ContentsLog> contentsLogList = new ArrayList<>();
+    private List<UserContents> userContentsList = new ArrayList<>();
 
     public Contents() {
     }
 
     @Builder
-    public Contents(String contentsSubject, String contentsDetail, Boolean contentsUseYn, List<ContentsCategory> contentsCategoryList, List<ContentsLog> contentsLogList) {
+    public Contents(String contentsSubject, String contentsDetail, Boolean contentsUseYn, List<ContentsCategory> contentsCategoryList, List<UserContents> userContentsList) {
         this.contentsSubject = contentsSubject;
         this.contentsDetail = contentsDetail;
         this.contentsUseYn = contentsUseYn;
         this.contentsCategoryList = contentsCategoryList;
-        this.contentsLogList = contentsLogList;
+        this.userContentsList = userContentsList;
     }
 }
