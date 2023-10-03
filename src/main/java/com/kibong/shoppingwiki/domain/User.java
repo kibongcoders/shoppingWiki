@@ -1,9 +1,12 @@
 package com.kibong.shoppingwiki.domain;
 
+import com.kibong.shoppingwiki.user.UserGrade;
+import com.kibong.shoppingwiki.user.dto.RequestUser;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +46,16 @@ public class User extends BaseTimeEntity{
     @OneToMany(mappedBy = "user")
     private List<UserContents> userContentsList = new ArrayList<>();
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 10)
+    @Comment("유저 등급")
+    private UserGrade userGrade;
+
     public User() {
     }
 
     @Builder
-    public User(Long id, String password, String userEmail, Boolean userUseYn, List<UserContents> userContentsList, String userNickname) {
+    public User(Long id, String password, String userEmail, Boolean userUseYn, List<UserContents> userContentsList, String userNickname, UserGrade userGrade) {
         this.id = id;
         this.password = password;
         this.userEmail = userEmail;
@@ -55,5 +63,13 @@ public class User extends BaseTimeEntity{
         this.userContentsList = userContentsList;
         this.userNickname = userNickname;
         this.userUuid = UUID.randomUUID().toString();
+        this.userGrade = userGrade;
+    }
+
+    public void updateUser(RequestUser requestUser, PasswordEncoder passwordEncoder){
+        this.userNickname = requestUser.getUserNickname();
+        if(!passwordEncoder.matches(requestUser.getPassword(), this.password)){
+            this.password = passwordEncoder.encode(requestUser.getPassword());
+        }
     }
 }

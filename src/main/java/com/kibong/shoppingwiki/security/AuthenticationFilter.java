@@ -31,7 +31,6 @@ import java.util.Optional;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserRepository userRepository;
-    private final UserService userService;
     private final Environment env;
 
     @Override

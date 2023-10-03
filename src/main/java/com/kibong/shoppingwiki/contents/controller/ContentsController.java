@@ -1,60 +1,47 @@
 package com.kibong.shoppingwiki.contents.controller;
 
+import com.kibong.shoppingwiki.contents.dto.ContentsDto;
+import com.kibong.shoppingwiki.contents.dto.RequestContents;
+import com.kibong.shoppingwiki.contents.service.ContentsService;
 import com.kibong.shoppingwiki.contents_category.service.ContentsCategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/contents")
 @RequiredArgsConstructor
+@Tag(name = "상품 API", description = "상품 검색 관련 API")
 @Slf4j
 public class ContentsController {
     private final ContentsCategoryService contentsCategoryService;
+    private final ContentsService contentsService;
     private final Environment env;
+
     @GetMapping("/{searchValue}")
-    ModelAndView searchContents(@PathVariable String searchValue){
-        ModelAndView mav = new ModelAndView("contents/search");
-
-        mav.addObject("contents", contentsCategoryService.searchContents(searchValue));
-
-        return mav;
+    ContentsDto searchContents(@PathVariable String searchValue) {
+        return contentsCategoryService.searchContents(searchValue);
     }
 
-    @GetMapping("/write")
-    ModelAndView writeContents(){
-        ModelAndView mav = new ModelAndView("writeTest");
-
-        return mav;
+    @PutMapping("/updateContents/{contentsId}")
+    void updateContents(
+            @PathVariable Long contentsId,
+            String contentsDetail,
+            @RequestHeader HttpServletRequest request
+    ) {
+        Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+        contentsService.updateContents(userId, contentsId, contentsDetail, request);
     }
 
-    @GetMapping("/hello")
-    @ResponseBody
-    String hello(){
-        return "hello";
-    }
-
-    @GetMapping("/message")
-    @ResponseBody
-    String message(@RequestHeader("wiki-request") String wikiRequest){
-        log.info("wiki-request = {}", wikiRequest);
-        return "wiki message";
-    }
-
-    @GetMapping("/check")
-    public String check(HttpServletRequest request){
-
-        log.info("Server port={}", request.getServerPort());
-        log.info("local.server.port={}", env.getProperty("local.server.port"));
-        log.info("server.port={}", env.getProperty("server.port"));
-        log.info("token.expiration_time={}", env.getProperty("token.expiration_time"));
-        log.info("token.secret={}", env.getProperty("token.secret"));
-        log.info("profile.value = {}", env.getProperty("profile.value"));
-
-        return String.format("wiki check %s", env.getProperty("local.server.port"));
+    @PostMapping("/createContents/")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    void createContents(@RequestBody RequestContents requestContents, @RequestHeader HttpServletRequest request) {
+        Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+        contentsService.createContents(userId, requestContents, request);
     }
 }

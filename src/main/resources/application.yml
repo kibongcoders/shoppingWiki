@@ -1,10 +1,10 @@
 #DB
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/shoping_wiki?enabledTLSProtocols=TLSv1.2&characterEncoding=utf-8&autoReconnect=TRUE&rewriteBatchedStatements=true&serverTimezone=Asia/Seoul
-    username: root
-    password: 3025
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/shoping_wiki?enabledTLSProtocols=TLSv1.2&characterEncoding=utf-8&autoReconnect=TRUE&rewriteBatchedStatements=true&serverTimezone=Asia/Seoul
+#    username: root
+#    password: 3025
+#    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -31,7 +31,7 @@ spring:
     import: optional:configserver:http://127.0.0.1:8888
   rabbitmq:
     host: 127.0.0.1
-    port: 15672
+    port: 5672
     username: admin
     password: 1234
   main:
@@ -74,6 +74,18 @@ management:
 #token:
 #  expiration_time: 86400000
 #  secret: 97F296E4586CDA219CF5A1F463B97394EAEFCDE349A6FF67E496C9EB5F
+springdoc:
+  swagger-ui:
+    enabled: true
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+  api-docs:
+    enabled: true
+    path: /shoppingwiki/v3/api-docs
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+
 
 
 

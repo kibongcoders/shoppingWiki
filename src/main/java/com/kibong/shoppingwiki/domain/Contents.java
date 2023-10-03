@@ -48,4 +48,8 @@ public class Contents extends BaseTimeEntity{
         this.contentsCategoryList = contentsCategoryList;
         this.userContentsList = userContentsList;
     }
+
+    public void updateContents(String contentsDetail){
+        this.contentsDetail = contentsDetail;
+    }
 }

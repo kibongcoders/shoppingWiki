@@ -20,6 +20,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(authentication.getName());
+
         if(!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())){
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }

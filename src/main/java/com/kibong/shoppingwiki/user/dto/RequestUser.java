@@ -24,5 +24,4 @@ public class RequestUser {
     @NotNull(message = "닉네임을 입력해 주세요")
     @Size(min = 2, message = "닉네임은 2자 이상으로 입력해 주세요")
     String userNickname;
-
 }
