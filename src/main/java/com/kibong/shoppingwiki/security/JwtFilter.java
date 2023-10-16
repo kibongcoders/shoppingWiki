@@ -34,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Optional<String> token = resolveToken(request);
 
         try {
+
             if (token.isPresent()) {
                 JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
                 if (jwtAuthToken.validate()) {
@@ -51,12 +52,16 @@ public class JwtFilter extends OncePerRequestFilter {
     private Optional<String> resolveToken(HttpServletRequest request) {
 
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String jwt = authToken.replace("Bearer", "");
-        log.info("authToken={}", authToken);
-        log.info("jwt={}", jwt);
-        if (StringUtils.hasText(jwt)) {
-            return Optional.of(jwt);
-        } else {
+        if(authToken != null){
+            String jwt = authToken.replace("Bearer", "");
+            log.info("authToken={}", authToken);
+            log.info("jwt={}", jwt);
+            if (StringUtils.hasText(jwt)) {
+                return Optional.of(jwt);
+            } else {
+                return Optional.empty();
+            }
+        }else{
             return Optional.empty();
         }
     }

@@ -1,7 +1,7 @@
 spring:
-  cloud:
-    config:
-      uri: http://127.0.0.1:8888
-      name: shoppingwiki
+#  cloud:
+#    config:
+#      uri: http://ec2-3-34-54-134.ap-northeast-2.compute.amazonaws.com:8888
+#      name: shoppingwiki
   profiles:
-    active: dev
+    default: dev

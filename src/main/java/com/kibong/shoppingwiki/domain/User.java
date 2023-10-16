@@ -68,7 +68,7 @@ public class User extends BaseTimeEntity{
 
     public void updateUser(RequestUser requestUser, PasswordEncoder passwordEncoder){
         this.userNickname = requestUser.getUserNickname();
-        if(!passwordEncoder.matches(requestUser.getPassword(), this.password)){
+        if(!passwordEncoder.matches(requestUser.getPassword(), this.password) && !requestUser.getPassword().equals("123456")){
             this.password = passwordEncoder.encode(requestUser.getPassword());
         }
     }

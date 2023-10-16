@@ -20,4 +20,7 @@ public class RequestLogin {
     //@Size(min = 8, message = "패스워드는 8자 이상으로 입력해주세요.")
     @Schema(description = "패스워드", example = "1234")
     String password;
+
+    public RequestLogin() {
+    }
 }

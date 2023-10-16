@@ -21,11 +21,11 @@ public class Category extends BaseTimeEntity{
 
     @Column(name = "category_name", nullable = false)
     @Comment("카테고리 이름")
-    private String category_name;
+    private String categoryName;
 
     @Column(name = "parent_id")
     @Comment("카테고리 부모 아이디")
-    private Long parent_id;
+    private Long parentId;
 
     @OneToMany(mappedBy = "category")
     List<ContentsCategory> contentsCategoryList = new ArrayList<>();
@@ -34,9 +34,9 @@ public class Category extends BaseTimeEntity{
     }
 
     @Builder
-    public Category(String category_name, Long parent_id, List<ContentsCategory> contentsCategoryList) {
-        this.category_name = category_name;
-        this.parent_id = parent_id;
+    public Category(String categoryName, Long parentId, List<ContentsCategory> contentsCategoryList) {
+        this.categoryName = categoryName;
+        this.parentId = parentId;
         this.contentsCategoryList = contentsCategoryList;
     }
 }

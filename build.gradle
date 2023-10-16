@@ -64,7 +64,8 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-    implementation 'mysql:mysql-connector-java:8.0.33'
+    //implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
     // -- QueryDSL ---
 
@@ -92,7 +93,8 @@ dependencies {
     //spring swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
-
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 
 

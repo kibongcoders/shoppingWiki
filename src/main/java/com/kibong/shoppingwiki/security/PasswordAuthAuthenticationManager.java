@@ -24,6 +24,7 @@ public class PasswordAuthAuthenticationManager implements AuthenticationProvider
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         User user = userRepository.getUserByUserEmail(authentication.getPrincipal().toString())
                 .orElseThrow(() -> new BadCredentialsException("가입되지 않은 아이디입니다."));
 

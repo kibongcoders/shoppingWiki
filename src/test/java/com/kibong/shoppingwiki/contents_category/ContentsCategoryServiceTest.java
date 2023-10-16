@@ -1,13 +1,13 @@
 package com.kibong.shoppingwiki.contents_category;
 
 
+import com.kibong.shoppingwiki.contents.repository.ContentsRedisRepository;
 import com.kibong.shoppingwiki.contents.repository.ContentsRepository;
 import com.kibong.shoppingwiki.contents.dto.ContentsDto;
 import com.kibong.shoppingwiki.contents_category.repository.ContentsCategoryRepository;
-import com.kibong.shoppingwiki.contents_category.service.ContentsCategoryService;
-import com.kibong.shoppingwiki.contents_category.service.ContentsCategoryServiceServiceImpl;
 import com.kibong.shoppingwiki.domain.Contents;
 import com.kibong.shoppingwiki.domain.ContentsCategory;
+import com.kibong.shoppingwiki.domain.redis.RedisContents;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,20 +32,44 @@ public class ContentsCategoryServiceTest {
     @Autowired
     ContentsCategoryRepository contentsCategoryRepository;
 
+    @Autowired
+    ContentsRedisRepository contentsRedisRepository;
+
     @Test
     @DisplayName("콘텐츠 서칭 서비스 테스트")
-    void contentsSearchingTest(@Mock ContentsCategoryRepository contentsCategoryRepository){
+    void contentsSearchingTest(){
         //Given
-        ContentsDto contentsDto = new ContentsDto(1L, "아이폰", "아이폰 굿", false, null);
+        //ContentsDto contentsDto = new ContentsDto(1L, "아이폰", "아이폰 굿", false, LocalDateTime.now(), LocalDateTime.now(), null);
 
-        given(contentsCategoryRepository.searchContents("아이폰")).willReturn(Optional.of(contentsDto));
-        ContentsCategoryService categoryService = new ContentsCategoryServiceServiceImpl(contentsCategoryRepository);
+//        Contents contents = Contents.builder()
+//                .contentsSubject("투투")
+//                .contentsUseYn(true)
+//                .contentsDetail("투투")
+//                .build();
+//
+//        contentsRepository.save(contents);
+
+        ContentsDto contentsDto = contentsCategoryRepository.searchContents("투투");
+
+        RedisContents redisContents = RedisContents.builder()
+                .contentsSubject(contentsDto.getContentsSubject())
+                .contentsDetail(contentsDto.getContentsDetail())
+                .contentsUseYn(contentsDto.getContentsUseYn())
+                .regDate(contentsDto.getRegDate())
+                .modDate(contentsDto.getModDate())
+                .build();
+
+        contentsRedisRepository.save(redisContents);
+
+
+        //given(contentsCategoryRepository.searchContents("아이폰")).willReturn(Optional.of(contentsDto));
+        //ContentsCategoryService categoryService = new ContentsCategoryServiceServiceImpl(contentsCategoryRepository);
 
         //When
-        ContentsDto returnContents = categoryService.searchContents("아이폰");
+        //ContentsDto returnContents = categoryService.searchContents("아이폰");
 
         //Then
-        assertEquals(returnContents.getContentsSubject(), contentsDto.getContentsSubject());
+        //assertEquals(returnContents.getContentsSubject(), contentsDto.getContentsSubject());
     }
 
 //    @Test

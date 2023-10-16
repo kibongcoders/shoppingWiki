@@ -1,11 +1,11 @@
 package com.kibong.shoppingwiki.user.service;
 
 import com.kibong.shoppingwiki.domain.User;
-
 import com.kibong.shoppingwiki.security.JwtAuthToken;
 import com.kibong.shoppingwiki.security.JwtAuthTokenProvider;
 import com.kibong.shoppingwiki.security.PasswordAuthAuthenticationManager;
 import com.kibong.shoppingwiki.security.PasswordAuthAuthenticationToken;
+import com.kibong.shoppingwiki.user.UserGrade;
 import com.kibong.shoppingwiki.user.dto.RequestLogin;
 import com.kibong.shoppingwiki.user.dto.RequestUser;
 import com.kibong.shoppingwiki.user.dto.ResponseUserDto;
@@ -13,19 +13,16 @@ import com.kibong.shoppingwiki.user.dto.UserDto;
 import com.kibong.shoppingwiki.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -47,12 +44,15 @@ public class UserServiceImpl implements UserService{
     private static final Date expiredDate = Date.from(LocalDateTime.now().plusYears(1L).atZone(ZoneId.systemDefault()).toInstant());
     @Override
     public ResponseUserDto login(RequestLogin requestLogin) {
-        Optional<User> optionalUser = userRepository.getUserByUserEmail(requestLogin.getUserEmail());
 
         String token = createJwt(requestLogin.getUserEmail(), requestLogin.getPassword());
 
+        JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token);
+        Authentication authentication = jwtAuthTokenProvider.getAuthentication(jwtAuthToken);
+
         ResponseUserDto responseUserDto = new ResponseUserDto();
         responseUserDto.setToken(token);
+        responseUserDto.setUserId(Long.valueOf(authentication.getName()));
 
         return responseUserDto;
     }
@@ -71,12 +71,15 @@ public class UserServiceImpl implements UserService{
                 .userEmail(requestUser.getUserEmail())
                 .userNickname(requestUser.getUserNickname())
                 .password(passwordEncoder.encode(requestUser.getPassword()))
+                .userGrade(UserGrade.NORMAL)
                 .userUseYn(true).build();
 
-        String token = createJwt(user.getUserEmail(), user.getPassword());
+        userRepository.save(user);
 
+        String token = createJwt(user.getUserEmail(), requestUser.getPassword());
         ResponseUserDto responseUserDto = new ResponseUserDto();
         responseUserDto.setToken(token);
+        responseUserDto.setUserId(user.getId());
 
         return responseUserDto;
     }

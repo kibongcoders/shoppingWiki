@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -28,8 +29,16 @@ public class UserController {
 
     @Operation(summary = "로그인", description = "")
     @PostMapping("/login")
-    public ResponseUserDto login(@RequestBody @Valid RequestLogin requestLogin) {
-        return userService.login(requestLogin);
+    public ResponseUserDto login(
+            @RequestParam("userEmail") String userEmail,
+            @RequestParam("password") String password
+            ) {
+
+        RequestLogin requestUser = new RequestLogin();
+        requestUser.setUserEmail(userEmail);
+        requestUser.setPassword(password);
+
+        return userService.login(requestUser);
     }
 
     @Operation(summary = "회원가입", description = "")

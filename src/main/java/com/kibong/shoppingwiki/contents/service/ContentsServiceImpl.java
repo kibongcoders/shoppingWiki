@@ -1,29 +1,61 @@
 package com.kibong.shoppingwiki.contents.service;
 
+import com.kibong.shoppingwiki.category.dto.CategoryDto;
+import com.kibong.shoppingwiki.contents.dto.ContentsDto;
 import com.kibong.shoppingwiki.contents.dto.RequestContents;
+import com.kibong.shoppingwiki.contents.repository.ContentsRedisRepository;
 import com.kibong.shoppingwiki.contents.repository.ContentsRepository;
+import com.kibong.shoppingwiki.contents_category.repository.ContentsCategoryRepository;
 import com.kibong.shoppingwiki.contents_log.repository.ContentsLogRepository;
-import com.kibong.shoppingwiki.domain.Contents;
-import com.kibong.shoppingwiki.domain.ContentsLog;
-import com.kibong.shoppingwiki.domain.User;
-import com.kibong.shoppingwiki.domain.UserContents;
+import com.kibong.shoppingwiki.domain.*;
+import com.kibong.shoppingwiki.domain.redis.RedisContents;
 import com.kibong.shoppingwiki.user.repository.UserRepository;
 import com.kibong.shoppingwiki.user_contents.repository.UserContentsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.kibong.shoppingwiki.user.UserUtil.nullCheckUser;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ContentsServiceImpl implements ContentsService {
 
-    private final ContentsRepository contentsRepository;
     private final UserRepository userRepository;
     private final UserContentsRepository userContentsRepository;
+    private final ContentsRepository contentsRepository;
+    private final ContentsCategoryRepository contentsCategoryRepository;
     private final ContentsLogRepository contentsLogRepository;
+    private final StringRedisTemplate redisTemplate;
+    private final ContentsRedisRepository contentsRedisRepository;
+
+    @Override
+    public ContentsDto searchContents(String searchValue) {
+
+        ContentsDto contentsDto = new ContentsDto();
+
+        Optional<RedisContents> redisContentsOptional = contentsRedisRepository.getRedisContentsByContentsSubject(searchValue);
+
+        if(redisContentsOptional.isEmpty()){
+            contentsDto = contentsCategoryRepository.searchContents(searchValue);
+        }else{
+            contentsDto.convertRedis(redisContentsOptional.get());
+        }
+
+        if(contentsDto != null){
+            List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(contentsDto.getContentsId());
+            contentsDto.setCategoryList(categoryList);
+        }
+
+        return contentsDto;
+    }
 
     /**
      * 콘텐츠 업데이트

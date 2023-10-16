@@ -34,4 +34,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(requestInterceptor)
                 .addPathPatterns(Arrays.asList("/api/**"));
     }
+
+
 }
