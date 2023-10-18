@@ -2,6 +2,7 @@ package com.kibong.shoppingwiki.contents.dto;
 
 import com.kibong.shoppingwiki.category.dto.CategoryDto;
 import com.kibong.shoppingwiki.domain.Category;
+import com.kibong.shoppingwiki.domain.redis.RedisCategory;
 import com.kibong.shoppingwiki.domain.redis.RedisContents;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,5 +42,9 @@ public class ContentsDto {
         this.contentsUseYn = redisContents.getContentsUseYn();
         this.regDate = redisContents.getRegDate();
         this.modDate = redisContents.getModDate();
+    }
+
+    public void addCategoryList(List<CategoryDto> categoryList){
+        this.categoryList = categoryList;
     }
 }

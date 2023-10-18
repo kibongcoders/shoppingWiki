@@ -8,7 +8,7 @@ public interface ContentsService {
 
     ContentsDto searchContents(String searchValue);
 
-    void updateContents(Long userId, Long contentsId, String contentsDetail, HttpServletRequest request);
+    void updateContents(Long userId, Long contentsId, String contentsDetail,String categoryName ,String ipAddress);
 
     void createContents(Long userId, RequestContents requestContents, HttpServletRequest request);
 }

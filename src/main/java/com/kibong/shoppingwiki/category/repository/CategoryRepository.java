@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long>, CategoryCustom{
 
     Optional<Category> getCategoryByCategoryName(String categoryName);
+
+    List<Category> getCategoriesByCategoryNameIn(List<String> categoryNameList);
 }

@@ -68,4 +68,14 @@ public class ContentsCategoryCustomImpl implements ContentsCategoryCustom {
                 .where(category.id.eq(categoryId))
                 .fetch();
     }
+
+    public List<Category> getCategoryNameList(Long contentsId){
+        return queryFactory
+                .select(category)
+                .from(contentsCategory)
+                .join(contentsCategory.category, category)
+                .join(contentsCategory.contents, contents)
+                .where(contents.id.eq(contentsId))
+                .fetch();
+    }
 }

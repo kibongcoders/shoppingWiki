@@ -14,4 +14,6 @@ public interface ContentsCategoryCustom {
     List<CategoryDto> getCategoryList(Long contentsId);
 
     List<ContentsDto> getContentsList(Long categoryId);
+
+    List<Category> getCategoryNameList(Long contentsId);
 }

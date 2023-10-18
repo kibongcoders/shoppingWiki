@@ -1,5 +1,6 @@
 package com.kibong.shoppingwiki.contents.controller;
 
+import com.google.common.net.HttpHeaders;
 import com.kibong.shoppingwiki.contents.dto.ContentsDto;
 import com.kibong.shoppingwiki.contents.dto.RequestContents;
 import com.kibong.shoppingwiki.contents.service.ContentsService;
@@ -31,10 +32,11 @@ public class ContentsController {
     void updateContents(
             @PathVariable Long contentsId,
             String contentsDetail,
-            @RequestHeader HttpServletRequest request
+            String categoryName,
+            @RequestHeader(HttpHeaders.X_FORWARDED_FOR) String ipAddress
     ) {
         Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
-        contentsService.updateContents(userId, contentsId, contentsDetail, request);
+        contentsService.updateContents(userId, contentsId, contentsDetail, categoryName, ipAddress);
     }
 
     @PostMapping("/createContents")

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface ContentsRedisRepository extends CrudRepository<RedisContents, Long> {
 
 
-    Optional<RedisContents> getRedisContentsByContentsSubject(String searchValue);
+    public Optional<RedisContents> findByContentsSubject(String searchValue);
 }
