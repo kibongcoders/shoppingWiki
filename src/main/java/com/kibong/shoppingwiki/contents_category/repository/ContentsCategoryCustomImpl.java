@@ -23,8 +23,8 @@ public class ContentsCategoryCustomImpl implements ContentsCategoryCustom {
     }
 
     @Override
-    public ContentsDto searchContents(String searchValue) {
-        return queryFactory.select(Projections.fields(
+    public Optional<ContentsDto> searchContents(String searchValue) {
+        return Optional.ofNullable(queryFactory.select(Projections.fields(
                         ContentsDto.class,
                         contents.id.as("contentsId"),
                         contents.contentsSubject,
@@ -35,7 +35,7 @@ public class ContentsCategoryCustomImpl implements ContentsCategoryCustom {
                 ))
                 .from(contents)
                 .where(contents.contentsSubject.eq(searchValue))
-                .fetchOne();
+                .fetchOne());
     }
 
     public List<CategoryDto> getCategoryList(Long contentsId){

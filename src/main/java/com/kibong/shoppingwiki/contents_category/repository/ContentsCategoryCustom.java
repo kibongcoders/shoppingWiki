@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ContentsCategoryCustom {
 
-    ContentsDto searchContents(String searchValue);
+    Optional<ContentsDto> searchContents(String searchValue);
 
     List<CategoryDto> getCategoryList(Long contentsId);
 

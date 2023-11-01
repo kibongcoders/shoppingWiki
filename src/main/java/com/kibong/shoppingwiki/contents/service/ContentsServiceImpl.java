@@ -12,6 +12,7 @@ import com.kibong.shoppingwiki.contents_log.repository.ContentsLogRepository;
 import com.kibong.shoppingwiki.domain.*;
 import com.kibong.shoppingwiki.domain.redis.RedisCategory;
 import com.kibong.shoppingwiki.domain.redis.RedisContents;
+import com.kibong.shoppingwiki.kafka.KafkaProducer;
 import com.kibong.shoppingwiki.user.repository.UserRepository;
 import com.kibong.shoppingwiki.user_contents.repository.UserContentsRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,32 +44,24 @@ public class ContentsServiceImpl implements ContentsService {
 
     private final ContentsRedisRepository contentsRedisRepository;
     private final CategoryRedisRepository categoryRedisRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public ContentsDto searchContents(String searchValue) {
 
-        ContentsDto contentsDto = new ContentsDto();
-
         Optional<RedisContents> redisContentsOptional = contentsRedisRepository.findByContentsSubject(searchValue);
-
+        ContentsDto contentsDto = new ContentsDto();
         //레디스 콘텐츠가 없는 경우
         if(redisContentsOptional.isEmpty()){
-            contentsDto = contentsCategoryRepository.searchContents(searchValue);
-
-            RedisContents redisContents = RedisContents.builder()
-                    .id(contentsDto.getContentsId())
-                    .contentsSubject(contentsDto.getContentsSubject())
-                    .contentsDetail(contentsDto.getContentsDetail())
-                    .contentsUseYn(contentsDto.getContentsUseYn())
-                    .regDate(contentsDto.getRegDate())
-                    .modDate(contentsDto.getModDate())
-                    .build();
+            Optional<ContentsDto> optionalContentsDto = contentsCategoryRepository.searchContents(searchValue);
 
 
-            if (contentsDto != null) {
-                List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(contentsDto.getContentsId());
-                contentsDto.setCategoryList(categoryList);
+            if (optionalContentsDto.isPresent()) {
+                ContentsDto searchContentsDto = optionalContentsDto.get();
+                List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(searchContentsDto.getContentsId());
+                searchContentsDto.setCategoryList(categoryList);
                 List<RedisCategory> redisCategoryList = new ArrayList<>();
+
                 for (CategoryDto categoryDto : categoryList) {
 
                     redisCategoryList.add(RedisCategory.builder()
@@ -80,11 +73,22 @@ public class ContentsServiceImpl implements ContentsService {
                             .build());
                 }
 
+                RedisContents redisContents = RedisContents.builder()
+                        .id(contentsDto.getContentsId())
+                        .contentsSubject(contentsDto.getContentsSubject())
+                        .contentsDetail(contentsDto.getContentsDetail())
+                        .contentsUseYn(contentsDto.getContentsUseYn())
+                        .regDate(contentsDto.getRegDate())
+                        .modDate(contentsDto.getModDate())
+                        .build();
+
                 redisContents.setCategoryList(redisCategoryList);
                 categoryRedisRepository.saveAll(redisCategoryList);
+                contentsRedisRepository.save(redisContents);
+            }else{
+                kafkaProducer.send("create-contents", searchValue);
             }
 
-            contentsRedisRepository.save(redisContents);
 
         } else {
             RedisContents redisContents = redisContentsOptional.get();

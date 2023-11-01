@@ -1,10 +1,13 @@
-#DB
+ #DB
 spring:
+  cloud:
+    config:
+      uri: http://localhost:8888
   datasource:
-      url: jdbc:mysql://shoppingwiki-instance-1.chveea2zqahi.ap-northeast-2.rds.amazonaws.com:3306/shoppingwiki?enabledTLSProtocols=TLSv1.2&characterEncoding=utf-8&autoReconnect=TRUE&rewriteBatchedStatements=true&serverTimezone=Asia/Seoul
-      username: admin
-      password: shoppingwiki_00
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/shoppingwiki
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -28,7 +31,6 @@ spring:
       host: apn1-clean-grub-33520.upstash.io
       port: 33520
       password: a94dce6adebf438e89c1d79a0655a567
-
   thymeleaf:
     cache: true
   application:
@@ -39,7 +41,8 @@ spring:
     addresses: amqps://lbmvskfp:tARJVmiTFLRvpHGU97UxZ8Jl8MrSGurb@dingo.rmq.cloudamqp.com/lbmvskfp
   main:
     lazy-initialization: true
-
+  devtools:
+    add-properties: false
 #logging
 logging:
   exception-conversion-word: '%wEx'
@@ -57,16 +60,17 @@ logging:
 
 
 server:
-  port: 8080
+  port: 0
+
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://eureka-alb-1623965459.ap-northeast-2.elb.amazonaws.com:8761/eureka
+      defaultZone: http://127.0.0.1:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    hostname: shoppingwiki-nlb-29aad846c98f991e.elb.ap-northeast-2.amazonaws.com
+    hostname: localhost
 
 management:
   endpoints:
@@ -74,6 +78,9 @@ management:
       exposure:
         include: refresh , health , beans , busrefresh
 
+#token:
+#  expiration_time: 86400000
+#  secret: 97F296E4586CDA219CF5A1F463B97394EAEFCDE349A6FF67E496C9EB5F
 springdoc:
   swagger-ui:
     enabled: true
@@ -89,7 +96,6 @@ springdoc:
 token:
   expiration_time: 86400000
   secret: 97F296E4586CDA219CF5A1F463B97394EAEFCDE349A6FF67E496C9EB5F
-
 
 
 
