@@ -1,11 +1,11 @@
 spring:
-  cloud:
-    config:
-      uri: http://config-alb-1685420372.ap-northeast-2.elb.amazonaws.com:8888
-      name: shoppingwiki
+#  cloud:
+#    config:
+#      uri: http://config-alb-1685420372.ap-northeast-2.elb.amazonaws.com:8888
+#      name: shoppingwiki
   profiles:
     default: prod
-    active: test
+    active: dev
 
 kafka:
   username: ZW5qb3llZC1kcmFrZS03MzczJDM382ihcoWEx7drAQShu3b1ixAVhwA32OQFvBU

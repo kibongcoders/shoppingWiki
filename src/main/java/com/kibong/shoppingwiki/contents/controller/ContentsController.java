@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/contents")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class ContentsController {
     private final Environment env;
 
     @GetMapping("/searchContents/{searchValue}")
-    ContentsDto searchContents(@PathVariable String searchValue) {
+    ContentsDto searchContents(@PathVariable String searchValue) throws IOException, ParseException, InterruptedException {
 
         return contentsService.searchContents(searchValue);
     }

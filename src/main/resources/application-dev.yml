@@ -78,9 +78,10 @@ management:
       exposure:
         include: refresh , health , beans , busrefresh
 
-#token:
-#  expiration_time: 86400000
-#  secret: 97F296E4586CDA219CF5A1F463B97394EAEFCDE349A6FF67E496C9EB5F
+token:
+  expiration_time: 86400000
+  secret: 97F296E4586CDA219CF5A1F463B97394EAEFCDE349A6FF67E496C9EB5F
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -93,7 +94,8 @@ springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 
-
+chatgpt:
+  api-key: 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
 
 
 

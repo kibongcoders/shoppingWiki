@@ -23,4 +23,9 @@ public class RequestLogin {
 
     public RequestLogin() {
     }
+
+    public RequestLogin(String userEmail, String password) {
+        this.userEmail = userEmail;
+        this.password = password;
+    }
 }

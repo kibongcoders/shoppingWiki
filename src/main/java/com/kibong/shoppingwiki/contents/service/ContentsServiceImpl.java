@@ -1,5 +1,6 @@
 package com.kibong.shoppingwiki.contents.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kibong.shoppingwiki.category.dto.CategoryDto;
 import com.kibong.shoppingwiki.category.repository.CategoryRedisRepository;
 import com.kibong.shoppingwiki.category.repository.CategoryRepository;
@@ -19,12 +20,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.kibong.shoppingwiki.user.UserUtil.nullCheckUser;
 
@@ -40,26 +39,30 @@ public class ContentsServiceImpl implements ContentsService {
     private final ContentsLogRepository contentsLogRepository;
     private final CategoryRepository categoryRepository;
 
-    private final StringRedisTemplate redisTemplate;
-
     private final ContentsRedisRepository contentsRedisRepository;
     private final CategoryRedisRepository categoryRedisRepository;
     private final KafkaProducer kafkaProducer;
+
+    @Value("${chatgpt.api-key}")
+    private String apiKey;
 
     @Override
     public ContentsDto searchContents(String searchValue) {
 
         Optional<RedisContents> redisContentsOptional = contentsRedisRepository.findByContentsSubject(searchValue);
         ContentsDto contentsDto = new ContentsDto();
-        //레디스 콘텐츠가 없는 경우
+
+        //레디스 콘텐츠가 없는 경우 DB에서 데이터 가져오기
         if(redisContentsOptional.isEmpty()){
             Optional<ContentsDto> optionalContentsDto = contentsCategoryRepository.searchContents(searchValue);
 
-
+            //DB에 콘텐츠가 있는 경우 레디스에 저장해 둔다.
+            //없을 경우에는 Kafka로 chat-gpt에 보내 데이터를 쌓도록 한다.
             if (optionalContentsDto.isPresent()) {
                 ContentsDto searchContentsDto = optionalContentsDto.get();
                 List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(searchContentsDto.getContentsId());
                 searchContentsDto.setCategoryList(categoryList);
+                contentsDto = searchContentsDto;
                 List<RedisCategory> redisCategoryList = new ArrayList<>();
 
                 for (CategoryDto categoryDto : categoryList) {
