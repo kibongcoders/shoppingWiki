@@ -25,7 +25,7 @@ public class ContentsController {
     private final Environment env;
 
     @GetMapping("/searchContents/{searchValue}")
-    ContentsDto searchContents(@PathVariable String searchValue) throws IOException, ParseException, InterruptedException {
+    ContentsDto searchContents(@PathVariable String searchValue) {
 
         return contentsService.searchContents(searchValue);
     }
