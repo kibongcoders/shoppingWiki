@@ -18,4 +18,6 @@ public interface UserService {
     UserDto getUserInfo(Long userId);
 
     void updateUser(RequestUser requestUser, Long userId);
+
+    ResponseUserDto getToken(Long userId, String refreshToken);
 }

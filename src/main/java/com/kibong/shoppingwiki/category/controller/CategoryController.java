@@ -2,6 +2,7 @@ package com.kibong.shoppingwiki.category.controller;
 
 import com.kibong.shoppingwiki.category.dto.ResponseCategoryDto;
 import com.kibong.shoppingwiki.category.service.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/category")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "카테고리 API", description = "카테고리 관련 API")
 public class CategoryController {
 
     private final CategoryService categoryService;

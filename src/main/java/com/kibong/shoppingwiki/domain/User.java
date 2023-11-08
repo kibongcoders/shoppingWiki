@@ -43,6 +43,10 @@ public class User extends BaseTimeEntity{
     @Comment("유저 닉네임")
     private String userUuid;
 
+    @Column(name = "refresh_token", nullable = false, unique = true)
+    @Comment("리프레쉬 토큰")
+    private String refreshToken;
+
     @OneToMany(mappedBy = "user")
     private List<UserContents> userContentsList = new ArrayList<>();
 
@@ -55,7 +59,8 @@ public class User extends BaseTimeEntity{
     }
 
     @Builder
-    public User(Long id, String password, String userEmail, Boolean userUseYn, List<UserContents> userContentsList, String userNickname, UserGrade userGrade) {
+    public User(
+            Long id, String password, String userEmail, Boolean userUseYn, List<UserContents> userContentsList, String userNickname, UserGrade userGrade) {
         this.id = id;
         this.password = password;
         this.userEmail = userEmail;
@@ -71,5 +76,9 @@ public class User extends BaseTimeEntity{
         if(!passwordEncoder.matches(requestUser.getPassword(), this.password) && !requestUser.getPassword().equals("123456")){
             this.password = passwordEncoder.encode(requestUser.getPassword());
         }
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

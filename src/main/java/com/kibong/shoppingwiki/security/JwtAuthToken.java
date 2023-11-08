@@ -1,13 +1,16 @@
 package com.kibong.shoppingwiki.security;
 
+import com.kibong.shoppingwiki.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -43,11 +46,19 @@ public class JwtAuthToken implements AuthToken<Claims>{
 
     @Override
     public boolean validate() {
-        return getData() != null;
+
+        boolean validation = true;
+
+        Claims claims = getData();
+        Date expireTime = claims.getExpiration();
+        log.info("subject = {}", claims.getSubject());
+        validation = new Date().before(Date.from(expireTime.toInstant()));
+        return validation;
     }
 
     @Override
     public Claims getData(){
+
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 }

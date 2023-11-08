@@ -19,7 +19,7 @@ public class Contents extends BaseTimeEntity{
     @Comment("콘텐츠 아이디")
     private Long id;
 
-    @Column(name = "contents_subject", nullable = false)
+    @Column(name = "contents_subject", nullable = false, unique = true)
     @Comment("콘텐츠 제목")
     private String contentsSubject;
 

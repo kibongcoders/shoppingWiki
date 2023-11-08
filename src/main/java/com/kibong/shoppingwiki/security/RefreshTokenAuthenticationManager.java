@@ -8,33 +8,22 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
 
 @Component
-public class PasswordAuthAuthenticationManager implements AuthenticationProvider {
+public class RefreshTokenAuthenticationManager implements AuthenticationProvider {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         User user = userRepository.findById(Long.valueOf(authentication.getPrincipal().toString()))
                 .orElseThrow(() -> new BadCredentialsException("가입되지 않은 아이디입니다."));
-
-        if (!passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-        }
 
         PasswordAuthAuthenticationToken token = new PasswordAuthAuthenticationToken(user.getId(), user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(user.getUserGrade().name())));

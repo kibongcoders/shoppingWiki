@@ -60,6 +60,7 @@ public class ContentsServiceImpl implements ContentsService {
             //없을 경우에는 Kafka로 chat-gpt에 보내 데이터를 쌓도록 한다.
             if (optionalContentsDto.isPresent()) {
                 ContentsDto searchContentsDto = optionalContentsDto.get();
+
                 List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(searchContentsDto.getContentsId());
                 searchContentsDto.setCategoryList(categoryList);
                 contentsDto = searchContentsDto;

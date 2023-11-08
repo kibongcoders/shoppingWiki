@@ -7,11 +7,8 @@ import com.kibong.shoppingwiki.user.dto.UserDto;
 import com.kibong.shoppingwiki.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,6 +75,15 @@ public class UserController {
             throw new IllegalArgumentException("접근할 수 없는 아이디입니다.");
         }
         return userService.getUserInfo(userId);
+    }
+
+    @Operation(summary = "Token 가져오기", description = "")
+    @GetMapping("/getToken/{userId}")
+    public ResponseUserDto getToken(
+            @PathVariable Long userId,
+            String refreshToken
+    ) {
+        return userService.getToken(userId, refreshToken);
     }
 }
 

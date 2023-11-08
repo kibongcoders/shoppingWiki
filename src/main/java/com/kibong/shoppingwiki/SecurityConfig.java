@@ -75,7 +75,7 @@ public class SecurityConfig{
         return web -> {
             web.ignoring().requestMatchers("/swagger-ui/**"
                     , "/shoppingwiki/v3/**", "/user/login", "/category/getCategory/**,user/", "/user/signUp"
-                    , "/contents/searchContents/**"
+                    , "/contents/searchContents/**" , "/user/getToken/**"
             );
         };
     }
