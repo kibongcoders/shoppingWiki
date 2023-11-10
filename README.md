@@ -14,3 +14,6 @@
 
 ## Shopping Wiki Jwt 시퀀스 다이어그램
 ![JWT 시퀀스 다이어그램 drawio](https://github.com/kibongcoders/shoppingWiki/assets/54662349/a26ef4c3-a5e3-481b-b99f-b46b6b7c51c9)
+
+## Shopping Wiki Wiki 정보 가져오기 시퀀스 다이어그램
+![기본적인 시퀀스 다이어 그램 drawio](https://github.com/kibongcoders/shoppingWiki/assets/54662349/e741348e-3e00-4640-b45e-594ff6542d5e)
