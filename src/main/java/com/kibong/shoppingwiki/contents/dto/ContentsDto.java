@@ -21,6 +21,8 @@ public class ContentsDto {
     private LocalDateTime regDate;
     private LocalDateTime modDate;
     List<CategoryDto> categoryList = new ArrayList<>();
+    List<TotalRank> totalRankList = new ArrayList<>();
+    List<TodayRank> todayRankList = new ArrayList<>();
 
     public ContentsDto() {
     }

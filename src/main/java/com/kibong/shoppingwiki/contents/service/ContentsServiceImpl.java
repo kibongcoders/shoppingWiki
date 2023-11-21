@@ -1,6 +1,5 @@
 package com.kibong.shoppingwiki.contents.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kibong.shoppingwiki.category.dto.CategoryDto;
 import com.kibong.shoppingwiki.category.repository.CategoryRedisRepository;
 import com.kibong.shoppingwiki.category.repository.CategoryRepository;
@@ -8,18 +7,22 @@ import com.kibong.shoppingwiki.contents.dto.ContentsDto;
 import com.kibong.shoppingwiki.contents.dto.RequestContents;
 import com.kibong.shoppingwiki.contents.repository.ContentsRedisRepository;
 import com.kibong.shoppingwiki.contents.repository.ContentsRepository;
+import com.kibong.shoppingwiki.contents.repository.TodayRankRedisRepository;
+import com.kibong.shoppingwiki.contents.repository.TotalRankRedisRepository;
 import com.kibong.shoppingwiki.contents_category.repository.ContentsCategoryRepository;
 import com.kibong.shoppingwiki.contents_log.repository.ContentsLogRepository;
 import com.kibong.shoppingwiki.domain.*;
 import com.kibong.shoppingwiki.domain.redis.RedisCategory;
 import com.kibong.shoppingwiki.domain.redis.RedisContents;
 import com.kibong.shoppingwiki.kafka.KafkaProducer;
+import com.kibong.shoppingwiki.kafka.dto.ContentsLogMsgDto;
 import com.kibong.shoppingwiki.user.repository.UserRepository;
 import com.kibong.shoppingwiki.user_contents.repository.UserContentsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +44,9 @@ public class ContentsServiceImpl implements ContentsService {
 
     private final ContentsRedisRepository contentsRedisRepository;
     private final CategoryRedisRepository categoryRedisRepository;
+    private final TotalRankRedisRepository totalRankRedisRepository;
+    private final TodayRankRedisRepository todayRankRedisRepository;
     private final KafkaProducer kafkaProducer;
-
-    @Value("${chatgpt.api-key}")
-    private String apiKey;
 
     @Override
     public ContentsDto searchContents(String searchValue) {
@@ -93,7 +95,6 @@ public class ContentsServiceImpl implements ContentsService {
                 kafkaProducer.send("create-contents", searchValue);
             }
 
-
         } else {
             RedisContents redisContents = redisContentsOptional.get();
             contentsDto.convertRedis(redisContents);
@@ -107,7 +108,17 @@ public class ContentsServiceImpl implements ContentsService {
                 });
                 contentsDto.addCategoryList(categoryDtoList);
             }
+
+
         }
+
+        contentsDto.setTodayRankList(todayRankRedisRepository.findTodayRanksTop10ByOrderByCountDesc());
+        contentsDto.setTotalRankList(totalRankRedisRepository.findTotalRanksTop10ByOrderByCountDesc());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("contentsSubject", searchValue);
+
+        kafkaProducer.jsonSend("count_contents", jsonObject);
 
         return contentsDto;
     }
@@ -216,6 +227,20 @@ public class ContentsServiceImpl implements ContentsService {
         redisContents.setCategoryList(redisCategoryList);
         contentsRedisRepository.save(redisContents);
         categoryRedisRepository.saveAll(redisCategoryList);
+
+//        ContentsLogMsgDto contentsLogMsgDto = new ContentsLogMsgDto();
+//        contentsLogMsgDto.setIpAddress(ipAddress);
+//        contentsLogMsgDto.setUserId(userId);
+//        contentsLogMsgDto.setContentsId(contentsId);
+//        contentsLogMsgDto.setContentsDetail(contentsDetail);
+
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("ipAddress", ipAddress);
+//        jsonObject.put("userId", userId);
+//        jsonObject.put("contentsId", contentsId);
+//        jsonObject.put("contentsDetail", contentsDetail);
+
+        //kafkaProducer.jsonSend("creat-contents-log", contentsLogMsgDto);
     }
 
     /**
