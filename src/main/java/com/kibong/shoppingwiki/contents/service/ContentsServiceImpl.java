@@ -22,10 +22,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static com.kibong.shoppingwiki.user.UserUtil.nullCheckUser;
@@ -60,37 +62,28 @@ public class ContentsServiceImpl implements ContentsService {
 
             //DB에 콘텐츠가 있는 경우 레디스에 저장해 둔다.
             //없을 경우에는 Kafka로 chat-gpt에 보내 데이터를 쌓도록 한다.
+            //DB의 있을 경우 카프카를 통해 Redis에 데이터를 저장하도록 함
             if (optionalContentsDto.isPresent()) {
+                JSONObject kafkaValue = new JSONObject();
                 ContentsDto searchContentsDto = optionalContentsDto.get();
 
                 List<CategoryDto> categoryList = contentsCategoryRepository.getCategoryList(searchContentsDto.getContentsId());
-                searchContentsDto.setCategoryList(categoryList);
-                contentsDto = searchContentsDto;
-                List<RedisCategory> redisCategoryList = new ArrayList<>();
-
                 for (CategoryDto categoryDto : categoryList) {
-
-                    redisCategoryList.add(RedisCategory.builder()
-                            .categoryName(categoryDto.getCategoryName())
-                            .id(categoryDto.getCategoryId())
-                            .parentId(categoryDto.getParentId())
-                            .regDate(categoryDto.getRegDate())
-                            .modDate(categoryDto.getModDate())
-                            .build());
+                    categoryDto.convertDate();
                 }
 
-                RedisContents redisContents = RedisContents.builder()
-                        .id(contentsDto.getContentsId())
-                        .contentsSubject(contentsDto.getContentsSubject())
-                        .contentsDetail(contentsDto.getContentsDetail())
-                        .contentsUseYn(contentsDto.getContentsUseYn())
-                        .regDate(contentsDto.getRegDate())
-                        .modDate(contentsDto.getModDate())
-                        .build();
+                kafkaValue.put("categoryList" ,categoryList);
+                kafkaValue.put("contentsId", searchContentsDto.getContentsId());
+                kafkaValue.put("contentsSubject", searchContentsDto.getContentsSubject());
+                kafkaValue.put("contentsDetail", searchContentsDto.getContentsDetail());
+                kafkaValue.put("contentsUseYn", searchContentsDto.getContentsUseYn());
+                kafkaValue.put("regDate", searchContentsDto.getRegDate().toEpochSecond(ZoneOffset.UTC));
+                kafkaValue.put("modDate", searchContentsDto.getModDate().toEpochSecond(ZoneOffset.UTC));
 
-                redisContents.setCategoryList(redisCategoryList);
-                categoryRedisRepository.saveAll(redisCategoryList);
-                contentsRedisRepository.save(redisContents);
+                kafkaProducer.jsonSend("create-contents-redis", kafkaValue);
+
+                searchContentsDto.setCategoryList(categoryList);
+                contentsDto = searchContentsDto;
             }else{
                 kafkaProducer.send("create-contents", searchValue);
             }

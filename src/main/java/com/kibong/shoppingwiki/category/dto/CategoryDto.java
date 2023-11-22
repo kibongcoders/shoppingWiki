@@ -4,6 +4,7 @@ import com.kibong.shoppingwiki.domain.redis.RedisCategory;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Data
 public class CategoryDto {
@@ -12,6 +13,8 @@ public class CategoryDto {
     private Long parentId;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+    private Long formatRegdate;
+    private Long formatModDate;
 
     public CategoryDto() {
     }
@@ -30,6 +33,11 @@ public class CategoryDto {
         this.parentId = redisCategory.getParentId();
         this.regDate = redisCategory.getRegDate();
         this.modDate = redisCategory.getModDate();
+    }
+
+    public void convertDate(){
+        this.formatRegdate = this.regDate.toEpochSecond(ZoneOffset.UTC);
+        this.formatModDate = this.modDate.toEpochSecond(ZoneOffset.UTC);
     }
 }
 
