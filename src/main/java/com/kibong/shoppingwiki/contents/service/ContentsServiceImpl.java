@@ -214,6 +214,7 @@ public class ContentsServiceImpl implements ContentsService {
                     .modDate(category.getModDate())
                     .build();
 
+
             redisCategoryList.add(redisCategory);
         }
 
